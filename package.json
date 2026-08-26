@@ -1,0 +1,18 @@
+{
+  "name": "a-mountain-roofing-nm",
+  "version": "1.0.0",
+  "description": "Static Site for A Mountain Roofing, LLC in Las Cruces, NM",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Static SSG Build Complete'",
+    "start": "python -m http.server 8080"
+  },
+  "keywords": [
+    "roofing",
+    "las-cruces",
+    "new-mexico",
+    "ssg"
+  ],
+  "author": "A Mountain Roofing, LLC",
+  "license": "MIT"
+}
