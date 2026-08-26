@@ -328,7 +328,7 @@ h1, h2, h3, h4, h5 {
   -webkit-backdrop-filter: none !important;
   padding: 0 !important;
   border-radius: 0 !important;
-  transition: transform 0.2s ease-out;
+  transition: transform 0.2s ease-out, opacity 0.25s ease, visibility 0.25s ease;
 }
 
 .brand-logo-fixed:hover {
@@ -356,11 +356,24 @@ body.light-theme .brand-logo-img {
   transform: translateX(-50%) !important;
   z-index: 99998 !important;
   width: auto;
-  transition: top 0.25s ease-out;
+  transition: top 0.25s ease-out, opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
 }
 
 .nav-dock.scrolled {
   top: 8px !important;
+}
+
+/* Hide Floating Navbar and Logo when Modal is Open */
+body.modal-is-open .nav-dock,
+body.modal-is-open .brand-logo-fixed,
+body:has(#intake-modal-overlay.open) .nav-dock,
+body:has(#intake-modal-overlay.open) .brand-logo-fixed,
+body:has(#video-modal-overlay.open) .nav-dock,
+body:has(#video-modal-overlay.open) .brand-logo-fixed {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(-20px) !important;
 }
 
 .nav-container {

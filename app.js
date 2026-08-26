@@ -532,12 +532,14 @@ void main() {
     applyUrgencyBadge(selectedUrgency);
     modalOverlay.classList.add("open");
     modalOverlay.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-is-open");
     document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
     modalOverlay.classList.remove("open");
     modalOverlay.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-is-open");
     document.body.style.overflow = "auto";
   };
 
