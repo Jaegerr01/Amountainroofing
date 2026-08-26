@@ -1531,33 +1531,38 @@ body.light-theme .brand-logo-img {
 
 .modal-card {
   width: 100%;
-  max-width: 580px;
+  max-width: 440px;
   background: var(--bg-surface);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
-  padding: 28px 20px;
+  padding: 20px 18px;
   position: relative;
-  max-height: 90vh;
+  max-height: 88vh;
   overflow-y: auto;
   box-sizing: border-box;
 }
 
 .modal-close-btn {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 12px;
+  right: 12px;
   background: rgba(255, 255, 255, 0.08);
   border: none;
   color: var(--text-primary);
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .modal-step {
@@ -1569,17 +1574,17 @@ body.light-theme .brand-logo-img {
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .form-label {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-secondary);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .form-input, .form-textarea, .form-select {
@@ -1587,10 +1592,10 @@ body.light-theme .brand-logo-img {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  padding: 12px 14px;
+  padding: 8px 11px;
   color: var(--text-primary);
   font-family: var(--font-body);
-  font-size: 16px; /* Prevents iOS Safari auto-zoom on input focus */
+  font-size: 14px;
   outline: none;
   box-sizing: border-box;
   transition: border-color var(--transition-fast);
@@ -1601,12 +1606,13 @@ body.light-theme .brand-logo-img {
 }
 
 .dropzone-box {
-  border: 2px dashed var(--border-default);
-  border-radius: var(--radius-md);
-  padding: 18px;
+  border: 1.5px dashed var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
   text-align: center;
   cursor: pointer;
   background: rgba(200, 76, 28, 0.04);
+  transition: border-color 0.2s ease;
 }
 
 /* ============================================================
