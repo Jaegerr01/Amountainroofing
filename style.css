@@ -969,69 +969,41 @@ body.light-theme .brand-logo-img {
   margin: 0 auto 40px;
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9; /* Perfect 16:9 Landscape Aspect Ratio */
+  aspect-ratio: 16 / 9;
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--border-default);
   box-shadow: var(--shadow-lg);
   touch-action: pan-y;
   background: #0A0E12;
+  cursor: crosshair;
 }
 
-.ba-image {
-  position: absolute;
-  inset: 0;
+#liquid-burn-canvas {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
 }
 
-.ba-overlay {
+.liquid-burn-badge {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 50%;
-  overflow: hidden;
-}
-
-.ba-overlay-img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.ba-slider-handle {
-  position: absolute;
-  top: 0;
-  bottom: 0;
+  bottom: 14px;
   left: 50%;
-  width: 4px;
-  background: var(--primary);
-  cursor: ew-resize;
   transform: translateX(-50%);
-  box-shadow: 0 0 12px var(--primary);
-}
-
-.ba-handle-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--primary);
-  color: #FFFFFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
+  background: rgba(10, 14, 18, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(200, 76, 28, 0.5);
+  color: var(--accent-gold);
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  z-index: 10;
 }
 
 /* Work Gallery Cards with Explicit Aspect Ratios */

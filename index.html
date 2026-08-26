@@ -379,14 +379,11 @@
         <p>Drag the slider below to see a real tile roof restoration transform a Southwestern home.</p>
       </div>
 
-      <!-- Before / After Touch Slider -->
-      <div class="before-after-wrapper" id="ba-slider">
-        <img src="assets/images/hero_roofing_nm.png" alt="After Roof Restoration" class="ba-image" />
-        <div class="ba-overlay" id="ba-overlay">
-          <img src="assets/images/roof_inspection_nm.png" alt="Before Roof Restoration" class="ba-image ba-overlay-img" />
-        </div>
-        <div class="ba-slider-handle" id="ba-handle">
-          <div class="ba-handle-button font-mono">↔</div>
+      <!-- Interactive Liquid Burn Reveal Before/After Showcase -->
+      <div class="before-after-wrapper" id="liquid-burn-container">
+        <canvas id="liquid-burn-canvas"></canvas>
+        <div class="liquid-burn-badge font-mono">
+          <span>🔥 HOVER & CLICK TO BURN REVEAL ROOF RESTORATION</span>
         </div>
       </div>
 
@@ -691,6 +688,8 @@
     </div>
   </div>
 
+  <!-- Three.js Library for Liquid Burn Reveal WebGL Shader Effect -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <!-- Main JavaScript File -->
   <script src="app.js"></script>
 

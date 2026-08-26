@@ -168,63 +168,349 @@ document.addEventListener("DOMContentLoaded", () => {
     calculateEstimate();
   }
 
-  // --- 5. Interactive Before / After Image Touch Slider ---
-  const baWrapper = document.getElementById("ba-slider");
-  const baOverlay = document.getElementById("ba-overlay");
-  const baHandle = document.getElementById("ba-handle");
-  const baOverlayImg = baOverlay ? baOverlay.querySelector(".ba-overlay-img") : null;
+  // --- 5. Interactive Liquid Burn Reveal Effect ---
+  const host = document.getElementById("liquid-burn-container");
+  const canvas = document.getElementById("liquid-burn-canvas");
 
-  if (baWrapper && baOverlay && baHandle) {
-    let isDragging = false;
+  if (host && canvas && typeof THREE !== "undefined") {
+    const FOV = 45;
+    const CAM_Z = 2;
+    const PLANE_H = 2 * CAM_Z * Math.tan((FOV * Math.PI) / 360);
+    const OVERSCAN = 1.08;
+    const TILT = 0.1;
+    const REF_RATE = 3.1;
+    const REF_BURN_VEL = 0.8;
+    const MOUSE_RATE = 9;
+    const RAGGED_CAP = 0.3;
 
-    const syncBeforeImageWidth = () => {
-      const w = baWrapper.getBoundingClientRect().width;
-      if (baOverlayImg && w > 0) {
-        baOverlayImg.style.width = `${w}px`;
-        baOverlayImg.style.maxWidth = `${w}px`;
-        baOverlayImg.style.minWidth = `${w}px`;
-      }
-    };
+    const IDLE = 0;
+    const BURNING = 1;
+    const BURNED = 2;
+    const UNBURNING = 3;
 
-    const updateSliderPos = (clientX) => {
-      const rect = baWrapper.getBoundingClientRect();
-      let x = clientX - rect.left;
-      if (x < 0) x = 0;
-      if (x > rect.width) x = rect.width;
-      const pct = (x / rect.width) * 100;
-      baOverlay.style.width = `${pct}%`;
-      baHandle.style.left = `${pct}%`;
-    };
+    const VERTEX_SRC = `
+uniform vec2 uResolution;
+uniform vec2 uSize1;
+uniform vec2 uSize2;
+uniform vec2 uMouse;
+uniform float uTilt;
 
-    syncBeforeImageWidth();
-    window.addEventListener("resize", syncBeforeImageWidth, { passive: true });
+varying vec2 vUv;
+varying vec2 vUv1;
+varying vec2 vUv2;
 
-    baWrapper.addEventListener("mousedown", (e) => {
-      isDragging = true;
-      syncBeforeImageWidth();
-      updateSliderPos(e.clientX);
-    });
+vec2 coverUv(vec2 p, vec2 res, vec2 img) {
+    float ra = res.x / max(res.y, 1.0);
+    float ia = img.x / max(img.y, 1.0);
+    vec2 s = ra > ia ? vec2(1.0, ia / ra) : vec2(ra / ia, 1.0);
+    return (p - 0.5) * s + 0.5;
+}
 
-    window.addEventListener("mousemove", (e) => {
-      if (!isDragging) return;
-      updateSliderPos(e.clientX);
-    });
+void main() {
+    vUv = uv;
+    vUv1 = coverUv(uv, uResolution, uSize1);
+    vUv2 = coverUv(uv, uResolution, uSize2);
 
-    window.addEventListener("mouseup", () => { isDragging = false; });
+    vec3 pos = position;
+    vec2 m = uMouse * 2.0 - 1.0;
+    vec2 c = uv - 0.5;
+    pos.z += (c.x * m.x + c.y * m.y) * uTilt;
 
-    // Touch Support for Mobile
-    baWrapper.addEventListener("touchstart", (e) => {
-      isDragging = true;
-      syncBeforeImageWidth();
-      if (e.touches[0]) updateSliderPos(e.touches[0].clientX);
-    }, { passive: true });
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+}
+`;
 
-    window.addEventListener("touchmove", (e) => {
-      if (!isDragging) return;
-      if (e.touches[0]) updateSliderPos(e.touches[0].clientX);
-    }, { passive: true });
+    const FRAGMENT_SRC = `
+precision highp float;
 
-    window.addEventListener("touchend", () => { isDragging = false; });
+#define OVERSCAN 1.0800
+#define RAGGED_CAP 0.3000
+
+uniform sampler2D uTexture1;
+uniform sampler2D uTexture2;
+uniform vec2 uCenter;
+uniform float uFront;
+uniform float uRevealRadius;
+uniform float uTime;
+uniform vec2 uResolution;
+uniform float uDistortionStrength;
+uniform float uEmberWidth;
+uniform vec3 uEmberColor;
+
+varying vec2 vUv;
+varying vec2 vUv1;
+varying vec2 vUv2;
+
+vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec3 permute(vec3 x) { return mod289(((x * 34.0) + 1.0) * x); }
+
+float snoise(vec2 v) {
+    const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                       -0.577350269189626, 0.024390243902439);
+    vec2 i  = floor(v + dot(v, C.yy));
+    vec2 x0 = v - i + dot(i, C.xx);
+    vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+    vec4 x12 = x0.xyxy + C.xxzz;
+    x12.xy -= i1;
+    i = mod289(i);
+    vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0))
+                            + i.x + vec3(0.0, i1.x, 1.0));
+    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy),
+                            dot(x12.zw, x12.zw)), 0.0);
+    m = m * m; m = m * m;
+    vec3 x = 2.0 * fract(p * C.www) - 1.0;
+    vec3 h = abs(x) - 0.5;
+    vec3 ox = floor(x + 0.5);
+    vec3 a0 = x - ox;
+    m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
+    vec3 g;
+    g.x  = a0.x  * x0.x  + h.x  * x0.y;
+    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+    return 130.0 * dot(m, g);
+}
+
+float fbm(vec2 p) {
+    float a = 0.5;
+    float s = 0.0;
+    for (int i = 0; i < 4; i++) {
+        s += a * snoise(p);
+        p *= 2.02;
+        a *= 0.5;
+    }
+    return s;
+}
+
+void main() {
+    vec2 cu = (vUv - 0.5) * OVERSCAN + 0.5;
+    float aspect = uResolution.x / max(uResolution.y, 1.0);
+    vec2 p = vec2(cu.x * aspect, cu.y);
+    vec2 c = vec2(uCenter.x * aspect, uCenter.y);
+
+    float dist = clamp(uDistortionStrength, 0.0, 1.0);
+    float R = max(uRevealRadius, 0.01);
+    float aa = clamp(2.0 / max(uResolution.y, 1.0), 0.0005, 0.05);
+    float open = clamp(uFront / R, 0.0, 1.0);
+    float d = distance(p, c);
+
+    float n = clamp(fbm(p * 3.0 + vec2(0.0, uTime * 0.05)) * 0.5 + 0.5, 0.0, 1.0);
+    float ragged = d + (n * 2.0 - 1.0) * 0.35 * min(R, RAGGED_CAP) * open;
+    float w = R * max(uEmberWidth * open, 0.004);
+    float burn = ragged - uFront;
+
+    float shimmer = (1.0 - smoothstep(0.0, w * 3.0, abs(burn))) * dist * 0.05;
+    vec2 q = vec2(snoise(p * 6.0 + uTime * 0.6),
+                  snoise(p * 6.0 + 31.7 - uTime * 0.5)) * shimmer;
+
+    vec3 c1 = texture2D(uTexture1, vUv1 + q).rgb;
+    vec3 c2 = texture2D(uTexture2, vUv2).rgb;
+
+    float charAmt = 1.0 - smoothstep(0.0, w * 2.0, burn);
+    c1 = mix(c1, c1 * vec3(0.12, 0.09, 0.08), charAmt * 0.9);
+
+    float reveal = 1.0 - smoothstep(-aa, aa, burn);
+    vec3 col = mix(c1, c2, reveal);
+
+    float ember = clamp(smoothstep(w, 0.0, burn)
+                      * smoothstep(-4.0 * aa, aa, burn), 0.0, 1.0);
+    vec3 hot = mix(uEmberColor, vec3(1.0, 0.92, 0.62), pow(ember, 5.0));
+    col = mix(col, hot, ember);
+    col += uEmberColor * pow(ember, 2.0) * 0.7;
+
+    gl_FragColor = vec4(col, 1.0);
+}
+`;
+
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: false,
+        alpha: true,
+        powerPreference: "high-performance",
+      });
+    } catch (err) {
+      console.warn("WebGL renderer init failed:", err);
+    }
+
+    if (renderer) {
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 100);
+      camera.position.z = CAM_Z;
+
+      const placeholder = new THREE.DataTexture(new Uint8Array([17, 17, 17, 255]), 1, 1, THREE.RGBAFormat);
+      placeholder.needsUpdate = true;
+
+      const uniforms = {
+        uTexture1: { value: placeholder },
+        uTexture2: { value: placeholder },
+        uCenter: { value: new THREE.Vector2(0.5, 0.5) },
+        uFront: { value: -1 },
+        uMouse: { value: new THREE.Vector2(0.5, 0.5) },
+        uTime: { value: 0 },
+        uResolution: { value: new THREE.Vector2(1, 1) },
+        uDistortionStrength: { value: 0.25 },
+        uEmberWidth: { value: 0.08 },
+        uRevealRadius: { value: 0.165 },
+        uEmberColor: { value: new THREE.Vector3(1, 0.27, 0) },
+        uSize1: { value: new THREE.Vector2(1, 1) },
+        uSize2: { value: new THREE.Vector2(1, 1) },
+        uTilt: { value: TILT },
+      };
+
+      const geometry = new THREE.PlaneGeometry(1, 1, 48, 48);
+      const material = new THREE.ShaderMaterial({
+        vertexShader: VERTEX_SRC,
+        fragmentShader: FRAGMENT_SRC,
+        uniforms,
+        transparent: false,
+        depthTest: false,
+        depthWrite: false,
+      });
+      const mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+
+      let cw = 0;
+      let ch = 0;
+      const resize = () => {
+        const w = host.clientWidth || 900;
+        const h = host.clientHeight || 500;
+        if (w === cw && h === ch) return;
+        cw = w;
+        ch = h;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        mesh.scale.set(PLANE_H * camera.aspect * OVERSCAN, PLANE_H * OVERSCAN, 1);
+        uniforms.uResolution.value.set(w, h);
+      };
+      resize();
+      window.addEventListener("resize", resize, { passive: true });
+
+      // Texture Loading
+      const loader = new THREE.TextureLoader();
+      loader.setCrossOrigin("anonymous");
+
+      const loadTex = (url, slot, sizeKey) => {
+        loader.load(url, (tex) => {
+          tex.minFilter = THREE.LinearFilter;
+          tex.magFilter = THREE.LinearFilter;
+          tex.generateMipmaps = false;
+          tex.wrapS = THREE.ClampToEdgeWrapping;
+          tex.wrapT = THREE.ClampToEdgeWrapping;
+          uniforms[slot].value = tex;
+          const img = tex.image;
+          if (img) uniforms[sizeKey].value.set(img.width || 1, img.height || 1);
+        });
+      };
+
+      loadTex("assets/images/roof_inspection_nm.png", "uTexture1", "uSize1");
+      loadTex("assets/images/hero_roofing_nm.png", "uTexture2", "uSize2");
+
+      let mode = IDLE;
+      let front = -0.1;
+      let mx = 0.5;
+      let my = 0.5;
+      let cx = 0.5;
+      let cy = 0.5;
+      let targetState = 0;
+
+      const aaOf = () => Math.min(Math.max(2 / (ch || 500), 0.0005), 0.05);
+      const closedOf = (R) => -(aaOf() + 0.014 * R);
+      const fullOf = (R) => {
+        const A = (cw || 900) / (ch || 500);
+        const ov = (OVERSCAN - 1) / 2;
+        const x0 = -ov * A;
+        const x1 = (1 + ov) * A;
+        const y0 = -ov;
+        const y1 = 1 + ov;
+        const ox = cx * A;
+        const oy = cy;
+        const d = Math.max(
+          Math.hypot(x0 - ox, y0 - oy),
+          Math.hypot(x1 - ox, y0 - oy),
+          Math.hypot(x0 - ox, y1 - oy),
+          Math.hypot(x1 - ox, y1 - oy)
+        );
+        const amp = 0.35 * Math.min(R, RAGGED_CAP);
+        const w = R * Math.max(0.08, 0.004);
+        return d + amp + 2 * w + 4 * aaOf();
+      };
+
+      const updateMouse = (e) => {
+        const r = host.getBoundingClientRect();
+        if (r.width <= 0 || r.height <= 0) return;
+        mx = (e.clientX - r.left) / r.width;
+        my = 1 - (e.clientY - r.top) / r.height;
+      };
+
+      host.addEventListener("pointerenter", () => { targetState = 1; });
+      host.addEventListener("pointerleave", () => { targetState = 0; });
+      host.addEventListener("pointermove", (e) => { updateMouse(e); }, { passive: true });
+      host.addEventListener("pointerdown", (e) => {
+        updateMouse(e);
+        if (mode === IDLE) {
+          cx = mx;
+          cy = my;
+          mode = BURNING;
+        } else if (mode === BURNING || mode === BURNED) {
+          mode = UNBURNING;
+        } else {
+          mode = BURNING;
+        }
+      });
+
+      let prevTime = performance.now();
+      let elapsed = 0;
+
+      const animate = (now) => {
+        requestAnimationFrame(animate);
+        const dt = Math.min((now - prevTime) / 1000, 0.05);
+        prevTime = now;
+        elapsed += dt;
+
+        const R = Math.max(0.165, 0.01);
+        const speed = 1.0;
+
+        const km = 1 - Math.exp(-MOUSE_RATE * dt);
+
+        if (mode === IDLE) {
+          cx = mx;
+          cy = my;
+          const closed = closedOf(R);
+          const tgt = targetState > 0.5 ? R : closed;
+          const rate = speed * REF_RATE;
+          const k = rate > 0 ? 1 - Math.exp(-rate * dt) : 0;
+          front += (tgt - front) * k;
+        } else {
+          const vel = speed * REF_BURN_VEL;
+          if (mode === BURNING) {
+            const full = fullOf(R);
+            front = Math.min(front + vel * dt, full);
+            if (front >= full) mode = BURNED;
+          } else if (mode === BURNED) {
+            front = fullOf(R);
+          } else {
+            cx += (mx - cx) * km;
+            cy += (my - cy) * km;
+            const floor = targetState > 0.5 ? R : closedOf(R);
+            if (front > floor) front = Math.max(front - vel * dt, floor);
+            if (front <= floor) mode = IDLE;
+          }
+        }
+
+        uniforms.uTime.value = elapsed;
+        uniforms.uFront.value = front;
+        uniforms.uCenter.value.set(cx, cy);
+        uniforms.uMouse.value.set(mx, my);
+
+        renderer.render(scene, camera);
+      };
+      requestAnimationFrame(animate);
+    }
   }
 
   // --- 6. Multi-Step 24/7 Intake Modal ---
