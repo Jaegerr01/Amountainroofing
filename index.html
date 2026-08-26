@@ -2,7 +2,7 @@
 <html lang="en-US">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <meta name="description" content="A Mountain Roofing, LLC - Licensed & Insured New Mexico Roofing Contractor (Lic #419991). Tile, Shingle, Metal & Commercial TPO Roofing in Las Cruces, NM. 24/7 Emergency Storm Leak Tarping. Call (575) 640-0794." />
   <meta name="keywords" content="roofing contractor las cruces nm, roof repair las cruces, a mountain roofing, tile roof replacement nm, commercial tpo roofing, emergency tarping, storm damage roof inspection" />
   <meta name="author" content="A Mountain Roofing, LLC" />
@@ -77,7 +77,7 @@
         <span class="font-mono">🟢 24/7 Emergency Dispatch Active · Las Cruces & Doña Ana County</span>
       </div>
       <div>
-        <span class="font-mono">NM Contractor Lic #419991 · </span>
+        <span class="font-mono">NM Lic #419991 · </span>
         <a href="tel:5756400794" class="ticker-phone-link font-mono">Call Dispatch: (575) 640-0794</a>
       </div>
     </div>
@@ -99,7 +99,7 @@
             </linearGradient>
           </defs>
         </svg>
-        <div>
+        <div class="brand-title-box">
           <span class="brand-title">A MOUNTAIN ROOFING</span>
           <div class="brand-sub">LAS CRUCES, NM</div>
         </div>
@@ -121,14 +121,14 @@
           </svg>
         </button>
         <a href="tel:5756400794" class="btn-call-now font-mono">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
           </svg>
           (575) 640-0794
         </a>
         <button class="btn-primary open-intake-trigger"><span>Request Inspection</span></button>
         <button class="mobile-nav-toggle" id="mobile-nav-btn" aria-label="Open Navigation Menu">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22">
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -141,18 +141,35 @@
   <!-- Mobile Drawer -->
   <div class="mobile-drawer" id="mobile-drawer">
     <div class="drawer-header">
-      <span class="brand-title">A MOUNTAIN ROOFING</span>
-      <button class="drawer-close" id="drawer-close-btn">&times;</button>
+      <div class="brand-logo-group">
+        <svg class="brand-logo-svg" viewBox="0 0 40 40" fill="none" width="30" height="30">
+          <path d="M20 4L4 28H14L20 18L26 28H36L20 4Z" fill="url(#drawerLogoGrad)" />
+          <path d="M12 32H28" stroke="#F3A72E" stroke-width="2.5" stroke-linecap="round" />
+          <defs>
+            <linearGradient id="drawerLogoGrad" x1="4" y1="4" x2="36" y2="28" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#E55A24" />
+              <stop offset="1" stop-color="#8B261D" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-title" style="font-size: 1rem;">A MOUNTAIN ROOFING</span>
+      </div>
+      <button class="drawer-close" id="drawer-close-btn" aria-label="Close menu">&times;</button>
     </div>
     <ul class="drawer-menu">
       <li><a href="#services" class="drawer-link">Services</a></li>
       <li><a href="#estimator" class="drawer-link">Cost Estimator</a></li>
       <li><a href="#projects" class="drawer-link">Roof Gallery</a></li>
-      <li><a href="#reviews" class="drawer-link">Reviews</a></li>
+      <li><a href="#reviews" class="drawer-link">Customer Reviews</a></li>
       <li><a href="#coverage" class="drawer-link">Coverage Area</a></li>
     </ul>
-    <div>
-      <a href="tel:5756400794" class="btn-primary" style="width: 100%; text-align: center;">Call (575) 640-0794</a>
+    <div class="drawer-actions-box">
+      <button class="btn-primary open-intake-trigger" style="width: 100%;">
+        <span>⚡ Request Roof Inspection</span>
+      </button>
+      <a href="tel:5756400794" class="btn-call-now font-mono" style="width: 100%; justify-content: center; min-height: 44px; font-size: 0.9375rem;">
+        📞 Call Dispatch (575) 640-0794
+      </a>
     </div>
   </div>
 
@@ -594,14 +611,14 @@
 
         <div>
           <h4 class="footer-col-title">DISPATCH OFFICE</h4>
-          <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 8px;">
+          <p style="color: var(--text-secondary); font-size: 0.8125rem; margin-bottom: 8px;">
             3901 Sonoma Springs Ave, Suite #514<br />
             Las Cruces, NM 88011
           </p>
-          <p class="font-mono" style="color: var(--text-primary); font-weight: 700; margin-bottom: 4px;">
+          <p class="font-mono" style="color: var(--text-primary); font-weight: 700; margin-bottom: 4px; font-size: 0.875rem;">
             Phone: <a href="tel:5756400794" style="color: var(--accent-gold); text-decoration: none;">(575) 640-0794</a>
           </p>
-          <p class="font-mono" style="color: var(--text-muted); font-size: 0.8125rem;">
+          <p class="font-mono" style="color: var(--text-muted); font-size: 0.75rem;">
             Email: info@amountainroofing.com
           </p>
         </div>
@@ -616,10 +633,10 @@
 
   <!-- Floating Launcher Button -->
   <button class="floating-launcher-btn open-intake-trigger" aria-label="Open 24/7 Intake Modal">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="20" height="20">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="18" height="18">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
     </svg>
-    <span>REQUEST INSPECTION / HELP</span>
+    <span>REQUEST INSPECTION</span>
   </button>
 
   <!-- Multi-Step 24/7 Intake Request Modal -->
@@ -629,28 +646,28 @@
 
       <!-- Step 1: Urgency -->
       <div class="modal-step active" id="modal-step-1">
-        <h3 id="modal-title" style="font-size: 1.5rem; margin-bottom: 8px;">How Can We Help You?</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 24px;">Select the service option that best matches your situation.</p>
+        <h3 id="modal-title" style="font-size: 1.35rem; margin-bottom: 6px;">How Can We Help You?</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.875rem;">Select the service option that best matches your situation.</p>
 
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          <button type="button" class="mat-card triage-btn" data-urgency="EMERGENCY" style="padding: 20px;">
-            <strong style="font-size: 1.05rem; color: var(--primary);">⚡ 24/7 Emergency Storm Tarping / Active Leak</strong>
-            <span style="display: block; font-size: 0.8125rem; color: var(--text-muted); margin-top: 4px;">60-Minute Emergency Dispatch Target for active ceiling leaks</span>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button type="button" class="mat-card triage-btn" data-urgency="EMERGENCY" style="padding: 16px;">
+            <strong style="font-size: 0.95rem; color: var(--primary);">⚡ 24/7 Emergency Storm Tarping / Active Leak</strong>
+            <span style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">60-Minute Emergency Dispatch Target for active ceiling leaks</span>
           </button>
-          <button type="button" class="mat-card triage-btn" data-urgency="ESTIMATE" style="padding: 20px;">
-            <strong style="font-size: 1.05rem; color: var(--accent-gold);">🏠 Roof Replacement or Repair Estimate</strong>
-            <span style="display: block; font-size: 0.8125rem; color: var(--text-muted); margin-top: 4px;">Tile, Shingle, Metal, or TPO Flat Roof Inspection</span>
+          <button type="button" class="mat-card triage-btn" data-urgency="ESTIMATE" style="padding: 16px;">
+            <strong style="font-size: 0.95rem; color: var(--accent-gold);">🏠 Roof Replacement or Repair Estimate</strong>
+            <span style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Tile, Shingle, Metal, or TPO Flat Roof Inspection</span>
           </button>
-          <button type="button" class="mat-card triage-btn" data-urgency="INSURANCE" style="padding: 20px;">
-            <strong style="font-size: 1.05rem; color: var(--accent-cyan);">📋 Insurance Storm Claim Photo Report</strong>
-            <span style="display: block; font-size: 0.8125rem; color: var(--text-muted); margin-top: 4px;">High-resolution photo evidence & damage documentation for adjusters</span>
+          <button type="button" class="mat-card triage-btn" data-urgency="INSURANCE" style="padding: 16px;">
+            <strong style="font-size: 0.95rem; color: var(--accent-cyan);">📋 Insurance Storm Claim Photo Report</strong>
+            <span style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">High-resolution photo evidence & damage documentation for adjusters</span>
           </button>
         </div>
       </div>
 
       <!-- Step 2: Contact Form -->
       <div class="modal-step" id="modal-step-2">
-        <h3 style="font-size: 1.5rem; margin-bottom: 6px;">Property & Contact Details</h3>
+        <h3 style="font-size: 1.35rem; margin-bottom: 6px;">Property & Contact Details</h3>
         <div class="eyebrow" id="urgency-tag-display">PRIORITY: EMERGENCY DISPATCH</div>
 
         <form id="intake-form">
@@ -659,7 +676,7 @@
             <input type="text" id="full-name" class="form-input" required placeholder="e.g. Sarah Martinez" />
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
             <div class="form-group">
               <label class="form-label" for="phone-num">Phone Number *</label>
               <input type="tel" id="phone-num" class="form-input font-mono" required placeholder="(575) 640-0000" />
@@ -684,14 +701,14 @@
             <label class="form-label">Attach Photos of Roof Damage (Optional)</label>
             <div class="dropzone-box" id="dropzone">
               <input type="file" id="file-input" multiple accept="image/*" style="display: none;" />
-              <div style="font-size: 1.5rem; margin-bottom: 4px;">📷</div>
-              <div style="font-weight: 700; font-size: 0.9375rem;">Click to upload damage photos</div>
+              <div style="font-size: 1.35rem; margin-bottom: 2px;">📷</div>
+              <div style="font-weight: 700; font-size: 0.875rem;">Click to upload damage photos</div>
               <div class="font-mono" style="font-size: 0.75rem; color: var(--text-muted);">PNG, JPG up to 10MB</div>
             </div>
-            <div id="file-preview-list" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;"></div>
+            <div id="file-preview-list" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;"></div>
           </div>
 
-          <div style="display: flex; gap: 12px; margin-top: 24px;">
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
             <button type="button" class="btn-secondary" id="step-back-btn">Back</button>
             <button type="submit" class="btn-primary" id="form-submit-btn" style="flex: 1;">
               <span>Submit Request</span>
@@ -701,16 +718,16 @@
       </div>
 
       <!-- Step 3: Success Confirmation -->
-      <div class="modal-step" id="modal-step-3" style="text-align: center; padding: 20px 0;">
-        <div style="width: 60px; height: 60px; border-radius: 50%; background: #22C55E; color: #FFFFFF; font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">✓</div>
-        <h3 style="font-size: 1.6rem; margin-bottom: 8px;">Request Received</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 24px;">
+      <div class="modal-step" id="modal-step-3" style="text-align: center; padding: 16px 0;">
+        <div style="width: 52px; height: 52px; border-radius: 50%; background: #22C55E; color: #FFFFFF; font-size: 1.75rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;">✓</div>
+        <h3 style="font-size: 1.4rem; margin-bottom: 6px;">Request Received</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.875rem;">
           Thank you! Our on-call roofing team has received your request and will contact you promptly.
         </p>
-        <div class="glass-panel" style="padding: 16px; margin-bottom: 24px;">
-          <strong style="color: var(--accent-gold);">NEED IMMEDIATE EMERGENCY HELP?</strong>
-          <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 4px;">If water is actively leaking into your home, call our dispatch line directly:</p>
-          <a href="tel:5756400794" class="btn-call-now font-mono" style="margin-top: 10px; display: inline-flex;">Call Now: (575) 640-0794</a>
+        <div class="glass-panel" style="padding: 14px; margin-bottom: 20px;">
+          <strong style="color: var(--accent-gold); font-size: 0.875rem;">NEED IMMEDIATE EMERGENCY HELP?</strong>
+          <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 4px;">If water is actively leaking into your home, call our dispatch line directly:</p>
+          <a href="tel:5756400794" class="btn-call-now font-mono" style="margin-top: 8px; display: inline-flex;">Call Now: (575) 640-0794</a>
         </div>
         <button type="button" class="btn-secondary" id="modal-done-btn" style="width: 100%;">Done</button>
       </div>
