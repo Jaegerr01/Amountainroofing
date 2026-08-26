@@ -984,19 +984,19 @@ body.light-theme .brand-logo-img {
 }
 
 .coverflow-card h3 {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-family: var(--font-display);
   font-weight: 700;
   color: var(--text-primary);
-  margin-top: 12px;
+  margin-top: 10px;
   margin-bottom: 8px;
 }
 
 .coverflow-card p {
   color: var(--text-secondary);
-  font-size: 0.875rem;
-  line-height: 1.5;
-  margin-bottom: 16px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin-bottom: 12px;
 }
 
 .coverflow-arrow {
@@ -1048,18 +1048,19 @@ body.light-theme .brand-logo-img {
 .service-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: auto;
-  padding-top: 14px;
-  border-top: 1px solid var(--border-subtle);
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 0;
+  border-top: none;
 }
 
 .tag-badge {
-  font-size: 0.6875rem;
+  font-size: 0.78125rem;
   font-weight: 600;
-  color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.05);
-  padding: 3px 8px;
+  color: var(--accent-gold);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
   border-radius: var(--radius-xs);
 }
 
