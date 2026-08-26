@@ -780,6 +780,12 @@ void main() {
           card.classList.remove("active");
           card.style.pointerEvents = "auto";
         }
+
+        const content = card.querySelector(".coverflow-card-content");
+        if (content) {
+          const blurVal = Math.min(absRel * 5, 6);
+          content.style.filter = blurVal > 0.05 ? `blur(${blurVal.toFixed(1)}px)` : "none";
+        }
       });
     };
 

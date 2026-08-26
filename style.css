@@ -981,22 +981,66 @@ body.light-theme .brand-logo-img {
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
+  transition: filter 0.35s ease, opacity 0.35s ease;
+}
+
+/* Side cards blur filter */
+.coverflow-card:not(.active) .coverflow-card-content {
+  filter: blur(5px);
+  opacity: 0.65;
 }
 
 .coverflow-card h3 {
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-family: var(--font-display);
   font-weight: 700;
   color: var(--text-primary);
-  margin-top: 10px;
-  margin-bottom: 8px;
+  margin-top: 8px;
+  margin-bottom: 6px;
+  transition: font-size 0.3s ease;
+}
+
+.coverflow-card.active h3 {
+  font-size: 1.6rem;
+  margin-top: 12px;
+  margin-bottom: 10px;
 }
 
 .coverflow-card p {
   color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.55;
-  margin-bottom: 12px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  transition: font-size 0.3s ease;
+}
+
+.coverflow-card.active p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.coverflow-card .service-icon-box {
+  width: 44px;
+  height: 44px;
+  transition: all 0.3s ease;
+}
+
+.coverflow-card.active .service-icon-box {
+  width: 56px;
+  height: 56px;
+  background: rgba(200, 76, 28, 0.22);
+  border-color: rgba(200, 76, 28, 0.6);
+}
+
+.coverflow-card.active .service-icon-box svg {
+  width: 32px;
+  height: 32px;
+}
+
+.coverflow-card.active .tag-badge {
+  font-size: 0.825rem;
+  padding: 5px 12px;
 }
 
 .coverflow-arrow {
