@@ -511,7 +511,54 @@ void main() {
       };
       requestAnimationFrame(animate);
     }
+  // --- 5b. Hero Phone Button Handler (Mobile Dial / Desktop Copy) ---
+  const heroPhoneBtn = document.getElementById("hero-phone-btn");
+  if (heroPhoneBtn) {
+    heroPhoneBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const rawNumber = "5756400794";
+      const formattedNumber = "(575) 640-0794";
+
+      // Detect mobile / tablet device
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobi/i.test(navigator.userAgent) ||
+                             (window.innerWidth <= 1024 && ('ontouchstart' in window || navigator.maxTouchPoints > 0));
+
+      if (isMobileDevice) {
+        window.location.href = `tel:${rawNumber}`;
+      } else {
+        // Desktop: Copy to clipboard with instant feedback
+        const textSpan = heroPhoneBtn.querySelector(".phone-btn-text");
+        const copyToClipboard = () => {
+          if (textSpan) textSpan.textContent = "COPIED: (575) 640-0794 ✓";
+          heroPhoneBtn.classList.add("copied-success");
+
+          setTimeout(() => {
+            if (textSpan) textSpan.textContent = "CALL (575) 640-0794";
+            heroPhoneBtn.classList.remove("copied-success");
+          }, 2500);
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(formattedNumber).then(copyToClipboard).catch(() => {
+            fallbackCopyText(formattedNumber);
+            copyToClipboard();
+          });
+        } else {
+          fallbackCopyText(formattedNumber);
+          copyToClipboard();
+        }
+      }
+    });
   }
+
+  const fallbackCopyText = (text) => {
+    const el = document.createElement("textarea");
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+  };
 
   // --- 6. Multi-Step 24/7 Intake Modal ---
   const modalOverlay = document.getElementById("intake-modal-overlay");
