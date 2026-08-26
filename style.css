@@ -1155,30 +1155,117 @@ body.light-theme .brand-logo-img {
   color: var(--text-muted);
 }
 
-.coverage-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 10px;
-  margin-top: 24px;
+/* ============================================================
+   SERVICE TERRITORY LOCATION SLIDER
+   ============================================================ */
+.coverage-slider-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
 }
 
-.town-pill {
-  background: rgba(255, 255, 255, 0.04);
+.coverage-slider-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 12px 6px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.coverage-slider-track::-webkit-scrollbar {
+  display: none;
+}
+
+.town-card {
+  flex: 0 0 250px;
+  scroll-snap-align: start;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 12px 8px;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  transition: all var(--transition-fast);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.25s ease-out;
+  cursor: pointer;
+  user-select: none;
 }
 
-.town-pill:hover {
-  background: var(--primary-light);
+.town-card:hover {
   border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200, 76, 28, 0.25);
+  background: rgba(200, 76, 28, 0.08);
+}
+
+.town-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.town-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.town-name {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 700;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.town-meta {
+  font-size: 0.72rem;
+  color: var(--accent-gold);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(10, 14, 18, 0.9);
+  border: 1px solid var(--border-default);
+  color: #FFFFFF;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s ease-out;
+}
+
+.slider-arrow:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.arrow-left {
+  left: -20px;
+}
+
+.arrow-right {
+  right: -20px;
 }
 
 /* ============================================================

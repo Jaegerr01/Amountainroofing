@@ -679,4 +679,34 @@ void main() {
       if (videoPlayer) videoPlayer.pause();
     });
   }
+
+  // --- 8. Coverage Territory Location Slider ---
+  const covTrack = document.getElementById("cov-slider-track");
+  const covPrevBtn = document.getElementById("cov-slide-prev");
+  const covNextBtn = document.getElementById("cov-slide-next");
+
+  if (covTrack) {
+    if (covPrevBtn) {
+      covPrevBtn.addEventListener("click", () => {
+        covTrack.scrollBy({ left: -280, behavior: "smooth" });
+      });
+    }
+    if (covNextBtn) {
+      covNextBtn.addEventListener("click", () => {
+        covTrack.scrollBy({ left: 280, behavior: "smooth" });
+      });
+    }
+
+    // Auto-scroll ticker loop (pauses on mouseenter/touchstart)
+    let autoScrollTimer = setInterval(() => {
+      if (covTrack.scrollLeft + covTrack.clientWidth >= covTrack.scrollWidth - 10) {
+        covTrack.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        covTrack.scrollBy({ left: 260, behavior: "smooth" });
+      }
+    }, 3200);
+
+    covTrack.addEventListener("mouseenter", () => clearInterval(autoScrollTimer));
+    covTrack.addEventListener("touchstart", () => clearInterval(autoScrollTimer), { passive: true });
+  }
 });
