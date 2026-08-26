@@ -990,6 +990,15 @@ h1, h2, h3, h4, h5 {
   overflow: hidden;
 }
 
+.ba-overlay-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .ba-slider-handle {
   position: absolute;
   top: 0;

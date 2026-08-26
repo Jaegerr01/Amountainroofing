@@ -172,9 +172,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const baWrapper = document.getElementById("ba-slider");
   const baOverlay = document.getElementById("ba-overlay");
   const baHandle = document.getElementById("ba-handle");
+  const baOverlayImg = baOverlay ? baOverlay.querySelector(".ba-overlay-img") : null;
 
   if (baWrapper && baOverlay && baHandle) {
     let isDragging = false;
+
+    const syncBeforeImageWidth = () => {
+      const w = baWrapper.getBoundingClientRect().width;
+      if (baOverlayImg && w > 0) {
+        baOverlayImg.style.width = `${w}px`;
+        baOverlayImg.style.maxWidth = `${w}px`;
+        baOverlayImg.style.minWidth = `${w}px`;
+      }
+    };
 
     const updateSliderPos = (clientX) => {
       const rect = baWrapper.getBoundingClientRect();
@@ -186,8 +196,12 @@ document.addEventListener("DOMContentLoaded", () => {
       baHandle.style.left = `${pct}%`;
     };
 
+    syncBeforeImageWidth();
+    window.addEventListener("resize", syncBeforeImageWidth, { passive: true });
+
     baWrapper.addEventListener("mousedown", (e) => {
       isDragging = true;
+      syncBeforeImageWidth();
       updateSliderPos(e.clientX);
     });
 
@@ -201,13 +215,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Touch Support for Mobile
     baWrapper.addEventListener("touchstart", (e) => {
       isDragging = true;
+      syncBeforeImageWidth();
       if (e.touches[0]) updateSliderPos(e.touches[0].clientX);
-    });
+    }, { passive: true });
 
     window.addEventListener("touchmove", (e) => {
       if (!isDragging) return;
       if (e.touches[0]) updateSliderPos(e.touches[0].clientX);
-    });
+    }, { passive: true });
 
     window.addEventListener("touchend", () => { isDragging = false; });
   }
