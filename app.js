@@ -511,6 +511,8 @@ void main() {
       };
       requestAnimationFrame(animate);
     }
+  }
+
   // --- 5b. Hero Phone Button Handler (Mobile Dial / Desktop Copy) ---
   const heroPhoneBtn = document.getElementById("hero-phone-btn");
   if (heroPhoneBtn) {
