@@ -519,44 +519,59 @@ void main() {
       const rawNumber = "5756400794";
       const formattedNumber = "(575) 640-0794";
 
-      // Detect mobile / tablet device
-      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobi/i.test(navigator.userAgent) ||
-                             (window.innerWidth <= 1024 && ('ontouchstart' in window || navigator.maxTouchPoints > 0));
+      // Detect true mobile user agent (smartphones / tablets with phone dialers)
+      const isMobileUA = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent);
 
-      if (isMobileDevice) {
+      if (isMobileUA) {
         window.location.href = `tel:${rawNumber}`;
       } else {
-        // Desktop: Copy to clipboard with instant feedback
-        const textSpan = heroPhoneBtn.querySelector(".phone-btn-text");
-        const copyToClipboard = () => {
-          if (textSpan) textSpan.textContent = "COPIED: (575) 640-0794 ✓";
-          heroPhoneBtn.classList.add("copied-success");
-
-          setTimeout(() => {
-            if (textSpan) textSpan.textContent = "CALL (575) 640-0794";
-            heroPhoneBtn.classList.remove("copied-success");
-          }, 2500);
-        };
-
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(formattedNumber).then(copyToClipboard).catch(() => {
-            fallbackCopyText(formattedNumber);
-            copyToClipboard();
-          });
-        } else {
-          fallbackCopyText(formattedNumber);
-          copyToClipboard();
-        }
+        // Desktop / Laptop: Copy to clipboard with instant feedback
+        copyPhoneNumber(formattedNumber, heroPhoneBtn);
       }
     });
   }
 
-  const fallbackCopyText = (text) => {
+  const copyPhoneNumber = (textToCopy, btnElement) => {
+    const textSpan = btnElement.querySelector(".phone-btn-text");
+
+    const triggerSuccessUI = () => {
+      if (textSpan) textSpan.textContent = "COPIED: (575) 640-0794 ✓";
+      btnElement.classList.add("copied-success");
+
+      setTimeout(() => {
+        if (textSpan) textSpan.textContent = "CALL (575) 640-0794";
+        btnElement.classList.remove("copied-success");
+      }, 2500);
+    };
+
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        triggerSuccessUI();
+      }).catch(() => {
+        execCopyFallback(textToCopy);
+        triggerSuccessUI();
+      });
+    } else {
+      execCopyFallback(textToCopy);
+      triggerSuccessUI();
+    }
+  };
+
+  const execCopyFallback = (text) => {
     const el = document.createElement("textarea");
     el.value = text;
+    el.setAttribute("readonly", "");
+    el.style.position = "fixed";
+    el.style.top = "0";
+    el.style.left = "-9999px";
     document.body.appendChild(el);
+    el.focus();
     el.select();
-    document.execCommand("copy");
+    try {
+      document.execCommand("copy");
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
     document.body.removeChild(el);
   };
 
