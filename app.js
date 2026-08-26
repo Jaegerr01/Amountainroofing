@@ -732,11 +732,11 @@ void main() {
 
     const render = () => {
       const isMobile = window.innerWidth < 768;
-      const activeW = isMobile ? 280 : 374;
-      const activeH = isMobile ? 380 : 466;
-      const restW = isMobile ? 120 : 159;
+      const activeW = isMobile ? 270 : 374;
+      const activeH = isMobile ? 360 : 466;
+      const restW = isMobile ? 110 : 159;
       const restH = isMobile ? 200 : 247;
-      const gap = isMobile ? 14 : 26;
+      const gap = isMobile ? 12 : 26;
 
       const c1 = activeW / 2 + gap + restW / 2;
       const pitch = restW + gap;
@@ -762,9 +762,9 @@ void main() {
         if (absRel > 2.5) {
           opacity = 0;
         } else if (absRel > 1.5) {
-          opacity = 0.35;
+          opacity = 0.3;
         } else if (absRel > 0.5) {
-          opacity = 0.75;
+          opacity = 0.7;
         }
 
         card.style.transform = `translate(calc(-50% + ${x}px), -50%)`;
@@ -775,22 +775,24 @@ void main() {
 
         if (absRel < 0.5) {
           card.classList.add("active");
+          card.style.pointerEvents = "auto";
         } else {
           card.classList.remove("active");
+          card.style.pointerEvents = "auto";
         }
       });
     };
 
     const updateLoop = () => {
       const diff = targetPos - currentPos;
-      if (Math.abs(diff) < 0.005) {
+      if (Math.abs(diff) < 0.002) {
         currentPos = targetPos;
         render();
         animFrame = null;
         return;
       }
 
-      currentPos += diff * 0.14;
+      currentPos += diff * 0.16;
       render();
       animFrame = requestAnimationFrame(updateLoop);
     };
@@ -805,24 +807,83 @@ void main() {
     if (cfPrevBtn) {
       cfPrevBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        goToIndex(targetPos - 1);
+        goToIndex(Math.round(targetPos) - 1);
       });
     }
 
     if (cfNextBtn) {
       cfNextBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        goToIndex(targetPos + 1);
+        goToIndex(Math.round(targetPos) + 1);
       });
     }
 
     cfCards.forEach((card, index) => {
-      card.addEventListener("click", () => {
-        let d = index - targetPos;
+      card.addEventListener("click", (e) => {
+        if (wasDragged) return; // ignore click if user was dragging
+        const roundTarget = Math.round(targetPos);
+        let d = index - roundTarget;
         d = ((d % count) + count) % count;
         if (d > count / 2) d -= count;
-        goToIndex(targetPos + d);
+        goToIndex(roundTarget + d);
       });
+    });
+
+    // Touch Swipe / Drag Interaction
+    let isDragging = false;
+    let wasDragged = false;
+    let startX = 0;
+    let dragPosStart = 0;
+
+    const getX = (e) => (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX);
+
+    const onPointerDown = (e) => {
+      if (e.target.closest(".coverflow-arrow")) return;
+      isDragging = true;
+      wasDragged = false;
+      startX = getX(e);
+      dragPosStart = currentPos;
+    };
+
+    const onPointerMove = (e) => {
+      if (!isDragging) return;
+      const x = getX(e);
+      const deltaX = x - startX;
+      if (Math.abs(deltaX) > 6) wasDragged = true;
+      const stepWidth = window.innerWidth < 768 ? 140 : 220;
+      targetPos = dragPosStart - deltaX / stepWidth;
+      currentPos = targetPos;
+      render();
+    };
+
+    const onPointerUp = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      targetPos = Math.round(targetPos);
+      if (!animFrame) animFrame = requestAnimationFrame(updateLoop);
+    };
+
+    cfStage.addEventListener("mousedown", onPointerDown);
+    window.addEventListener("mousemove", onPointerMove);
+    window.addEventListener("mouseup", onPointerUp);
+
+    cfStage.addEventListener("touchstart", onPointerDown, { passive: true });
+    window.addEventListener("touchmove", onPointerMove, { passive: true });
+    window.addEventListener("touchend", onPointerUp);
+
+    // Keyboard navigation when hovered
+    let isHovered = false;
+    cfStage.addEventListener("mouseenter", () => { isHovered = true; });
+    cfStage.addEventListener("mouseleave", () => { isHovered = false; });
+    window.addEventListener("keydown", (e) => {
+      if (!isHovered) return;
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goToIndex(Math.round(targetPos) - 1);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goToIndex(Math.round(targetPos) + 1);
+      }
     });
 
     window.addEventListener("resize", () => render(), { passive: true });
