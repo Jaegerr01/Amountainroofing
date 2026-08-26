@@ -4,8 +4,9 @@
   "description": "Static Site for A Mountain Roofing, LLC in Las Cruces, NM",
   "main": "index.html",
   "scripts": {
-    "build": "echo 'Static SSG Build Complete'",
-    "start": "python -m http.server 8080"
+    "dev": "python -m http.server 8080",
+    "start": "python -m http.server 8080",
+    "build": "echo 'Static SSG Build Complete'"
   },
   "keywords": [
     "roofing",
