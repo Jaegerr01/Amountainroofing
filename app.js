@@ -1,4 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // --- 0. Fixed Navbar Scroll Handler ---
+  const navDock = document.querySelector(".nav-dock");
+  if (navDock) {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 20) {
+        navDock.classList.add("scrolled");
+      } else {
+        navDock.classList.remove("scrolled");
+      }
+    }, { passive: true });
+  }
+
   // --- 1. Light / Dark Theme Toggle ---
   const themeToggleBtn = document.getElementById("theme-toggle");
   const storedTheme = localStorage.getItem("amr_theme");
