@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- 0. Fixed Navbar Scroll Handler ---
+  // --- 0. Fixed Navbar Scroll & Active Link Handler ---
   const navDock = document.querySelector(".nav-dock");
+  const navLinks = document.querySelectorAll(".nav-link");
+  const sections = document.querySelectorAll("section[id]");
+
   if (navDock) {
     window.addEventListener("scroll", () => {
       if (window.scrollY > 20) {
@@ -8,6 +11,24 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         navDock.classList.remove("scrolled");
       }
+
+      // Scroll Spy for Active Link Highlight
+      let currentSec = "";
+      sections.forEach((sec) => {
+        const secTop = sec.offsetTop - 120;
+        const secHeight = sec.offsetHeight;
+        if (window.scrollY >= secTop && window.scrollY < secTop + secHeight) {
+          currentSec = sec.getAttribute("id");
+        }
+      });
+
+      navLinks.forEach((link) => {
+        link.classList.remove("active");
+        const href = link.getAttribute("href");
+        if ((currentSec && href === `#${currentSec}`) || (!currentSec && href === "#")) {
+          link.classList.add("active");
+        }
+      });
     }, { passive: true });
   }
 
