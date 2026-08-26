@@ -354,7 +354,7 @@ void main() {
         uResolution: { value: new THREE.Vector2(1, 1) },
         uDistortionStrength: { value: 0.25 },
         uEmberWidth: { value: 0.08 },
-        uRevealRadius: { value: 0.165 },
+        uRevealRadius: { value: 0.25 },
         uEmberColor: { value: new THREE.Vector3(1, 0.27, 0) },
         uSize1: { value: new THREE.Vector2(1, 1) },
         uSize2: { value: new THREE.Vector2(1, 1) },
@@ -472,7 +472,7 @@ void main() {
         prevTime = now;
         elapsed += dt;
 
-        const R = Math.max(0.165, 0.01);
+        const R = Math.max(0.25, 0.01);
         const speed = 1.0;
 
         const km = 1 - Math.exp(-MOUSE_RATE * dt);
