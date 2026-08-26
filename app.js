@@ -709,4 +709,125 @@ void main() {
     covTrack.addEventListener("mouseenter", () => clearInterval(autoScrollTimer));
     covTrack.addEventListener("touchstart", () => clearInterval(autoScrollTimer), { passive: true });
   }
+
+  // --- 9. Coverflow Carousel (Our Capabilities) ---
+  const cfStage = document.getElementById("coverflow-stage");
+  const cfPrevBtn = document.getElementById("coverflow-prev");
+  const cfNextBtn = document.getElementById("coverflow-next");
+  const cfCards = Array.from(document.querySelectorAll(".coverflow-card"));
+
+  if (cfStage && cfCards.length > 0) {
+    const count = cfCards.length;
+    let targetPos = 0;
+    let currentPos = 0;
+    let animFrame = null;
+
+    const relOf = (index, pos, count) => {
+      let rel = (((index - pos) % count) + count) % count;
+      if (rel > count / 2) rel -= count;
+      return rel;
+    };
+
+    const blendForRel = (rel) => Math.min(Math.abs(rel), 1);
+
+    const render = () => {
+      const isMobile = window.innerWidth < 768;
+      const activeW = isMobile ? 280 : 374;
+      const activeH = isMobile ? 380 : 466;
+      const restW = isMobile ? 120 : 159;
+      const restH = isMobile ? 200 : 247;
+      const gap = isMobile ? 14 : 26;
+
+      const c1 = activeW / 2 + gap + restW / 2;
+      const pitch = restW + gap;
+
+      cfCards.forEach((card, i) => {
+        const rel = relOf(i, currentPos, count);
+        const absRel = Math.abs(rel);
+
+        let x = 0;
+        if (absRel <= 1) {
+          x = absRel * c1;
+        } else {
+          x = c1 + (absRel - 1) * pitch;
+        }
+        if (rel < 0) x = -x;
+
+        const blend = blendForRel(rel);
+        const w = activeW + (restW - activeW) * blend;
+        const h = activeH + (restH - activeH) * blend;
+        const zIndex = Math.round(1000 - absRel * 100);
+
+        let opacity = 1;
+        if (absRel > 2.5) {
+          opacity = 0;
+        } else if (absRel > 1.5) {
+          opacity = 0.35;
+        } else if (absRel > 0.5) {
+          opacity = 0.75;
+        }
+
+        card.style.transform = `translate(calc(-50% + ${x}px), -50%)`;
+        card.style.width = `${w}px`;
+        card.style.height = `${h}px`;
+        card.style.zIndex = zIndex;
+        card.style.opacity = opacity;
+
+        if (absRel < 0.5) {
+          card.classList.add("active");
+        } else {
+          card.classList.remove("active");
+        }
+      });
+    };
+
+    const updateLoop = () => {
+      const diff = targetPos - currentPos;
+      if (Math.abs(diff) < 0.005) {
+        currentPos = targetPos;
+        render();
+        animFrame = null;
+        return;
+      }
+
+      currentPos += diff * 0.14;
+      render();
+      animFrame = requestAnimationFrame(updateLoop);
+    };
+
+    const goToIndex = (newTarget) => {
+      targetPos = newTarget;
+      if (!animFrame) {
+        animFrame = requestAnimationFrame(updateLoop);
+      }
+    };
+
+    if (cfPrevBtn) {
+      cfPrevBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        goToIndex(targetPos - 1);
+      });
+    }
+
+    if (cfNextBtn) {
+      cfNextBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        goToIndex(targetPos + 1);
+      });
+    }
+
+    cfCards.forEach((card, index) => {
+      card.addEventListener("click", () => {
+        let d = index - targetPos;
+        d = ((d % count) + count) % count;
+        if (d > count / 2) d -= count;
+        goToIndex(targetPos + d);
+      });
+    });
+
+    window.addEventListener("resize", () => render(), { passive: true });
+
+    // Initial render
+    render();
+  }
 });
